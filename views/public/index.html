@@ -6,10 +6,10 @@
 </head>
 <body>
 
-<h2>Выберите CVS для загрузки.</h2>
+<h2>Выберите CSV для загрузки.</h2>
 <form action="/api/download/" enctype="multipart/form-data" method="post">
-    <input type="file" name="file" accept="text/csv">
-    <button type="submit">Загрузить.</button>
+    <input type="file" name="file" accept=".csv" required>
+    <button type="submit" value="upload">Загрузить</button>
 </form>
 
 </body>

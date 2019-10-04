@@ -1,12 +1,16 @@
-const express   = require('express');
-const routesApi = require('./routes/api');
-
-const app = express();
+const app           = require('express')();
+const routesApi     = require('./routes/api');
+const routesPublic  = require('./routes/public');
+const fileUpload    = require('express-fileupload');
 
 /**
  * Middleware
  */
-
+app.use(fileUpload({
+    limits: { fileSize: 50 * 1024 * 1024 },
+    useTempFiles : true,
+    tempFileDir : '/tmp/'
+}));
 // Каталог для статичный файлов
 // app.use(express.static(path.join(__dirname, 'public')));
 
@@ -14,6 +18,7 @@ const app = express();
 /**
  * Routes
  */
+app.use('/', routesPublic);
 app.use('/api', routesApi);
 
 // Catch 404
