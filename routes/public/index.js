@@ -1,7 +1,3 @@
-const router = require('express').Router();
-const PublicController = require('../../controllers/public/PublicController');
-
-
-router.get('', PublicController.index);
+const router = require('./base-public');
 
 module.exports = router;

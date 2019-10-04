@@ -1,4 +1,5 @@
 const path = require('path');
+
 /**
  * Public контроллер.
  */

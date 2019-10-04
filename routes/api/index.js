@@ -1,7 +1,3 @@
-const router = require('express').Router();
-const ApiController = require('../../controllers/api/ApiController');
-
-
-router.get('/', ApiController.download);
+const router = require('./base-api');
 
 module.exports = router;

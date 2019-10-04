@@ -1,15 +1,30 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Загрузка</title>
+  <meta charset="UTF-8">
+  <title>Загрузка</title>
+<!--  <script type="text/javascript" src="/js/page/index/index.js" defer></script>-->
 </head>
 <body>
 
-<h2>Выберите CSV для загрузки.</h2>
-<form action="/api/download/" enctype="multipart/form-data" method="post">
-    <input type="file" name="file" accept=".csv" required>
-    <button type="submit" value="upload">Загрузить</button>
+<h2>Добавить пользователей из CSV.</h2>
+<form action="/api/download/" enctype="multipart/form-data" method="post" id="download-csv-form">
+  <input type="file" name="file" id="csv-file" accept=".csv" required>
+  <button type="submit" value="upload">Загрузить</button>
+</form>
+
+<hr>
+
+<h2>Получить CSV всех пользователей из БД.</h2>
+<form action="/api/get-csv/" method="get">
+  <button type="submit" name="get-csv">Получить CSV</button>
+</form>
+
+<hr>
+
+<h2>Получить JSON данные всех пользователей из БД.</h2>
+<form action="/api/get-json/" method="get">
+  <button type="submit">Получить JSON</button>
 </form>
 
 </body>
