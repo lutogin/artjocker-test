@@ -2,30 +2,62 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Загрузка</title>
-<!--  <script type="text/javascript" src="/js/page/index/index.js" defer></script>-->
+  <title>ArtJoker!</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" \
+          integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+          crossorigin="anonymous"
+          defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+          integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+          crossorigin="anonymous" defer></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+          integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+          crossorigin="anonymous"
+          defer></script>
+  <script type="text/javascript" src="/js/page/index/index.js" defer></script>
 </head>
+
 <body>
+  <div class="container mt-4">
+    <h4 class="text-center">Artjoker</h4>
+    <hr>
+    <div class="row">
+      <div class="col-sm text-center">
+        <form action="/api/download-csv/" enctype="multipart/form-data" method="post" id="download-csv">
+          <div class="input-group">
+            <div class="custom-file">
+              <input type="file" name="file" id="csv-file" accept=".csv" class="custom-file-input" aria-describedby="input-csv" required>
+              <label class="custom-file-label" for="csv-file" aria-describedby="input-csv">CSV</label>
+            </div>
+            <div class="input-group-append">
+              <button type="submit" class="btn btn-outline-primary">Загрузить</button>
+            </div>
+          </div>
+        </form>
+      </div>
 
-<h2>Добавить пользователей из CSV.</h2>
-<form action="/api/download/" enctype="multipart/form-data" method="post" id="download-csv-form">
-  <input type="file" name="file" id="csv-file" accept=".csv" required>
-  <button type="submit" value="upload">Загрузить</button>
-</form>
+      <div class="col-sm text-center">
+        <form action="/api/get-csv/" method="get" id="get-csv">
+          <button type="submit" class="btn btn-outline-primary">Получить CSV</button>
+        </form>
+      </div>
 
-<hr>
+      <div class="col-sm text-center">
+        <form action="/api/get-json/" method="get" id="get-json">
+          <button type="submit" class="btn btn-outline-primary">Получить JSON</button>
+        </form>
+      </div>
+    </div>
 
-<h2>Получить CSV всех пользователей из БД.</h2>
-<form action="/api/get-csv/" method="get">
-  <button type="submit" name="get-csv">Получить CSV</button>
-</form>
+    <hr>
 
-<hr>
-
-<h2>Получить JSON данные всех пользователей из БД.</h2>
-<form action="/api/get-json/" method="get">
-  <button type="submit">Получить JSON</button>
-</form>
+    <div class="row">
+      <div id="info-block" class="col-sm">
+        <span id="info"></span>
+      </div>
+    </div>
+  </div>
 
 </body>
 </html>

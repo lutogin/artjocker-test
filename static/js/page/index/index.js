@@ -1,23 +1,42 @@
-downloadForm = document.querySelector('#download-csv-form');
-fileInput = downloadForm.querySelector('#csv-file');
+// Форма загрузки CSV
+downloadCsvForm = document.querySelector('#download-csv');
+fileInputCsv = downloadCsvForm.querySelector('#csv-file');
 
-const upload = (file) => {
-    fetch(`${window.location.origin}/api/download/`, {
+// Форма получения JSON
+getJsonForm = document.querySelector('#get-json');
+
+// Инфо блок
+infoBlock = document.querySelector('#info-block #info');
+
+
+/**
+ * Обработка загрузки CSV.
+ */
+downloadCsvForm.addEventListener('submit', (evt) => {
+    evt.preventDefault();
+
+    fetch(`${window.location.origin}/api/download-csv/`, {
         method: 'POST',
         headers: {
             "Content-Type": "multipart/form-data"
         },
-        body: file
-    }).then(
-        response => response.json()
-    ).then(
-        success => console.log(success)
-    ).catch(
-        error => console.log(error)
-    );
-};
+        body: fileInputCsv.files[0]
+    })
+        .then(response => response.json())
+        .then(success => infoBlock.innerText = success.msg)
+        .catch(err => console.log(err.message));
+});
 
-downloadForm.addEventListener('submit', (evt) => {
+/**
+ * Обработка ПОлучения JSON
+ */
+getJsonForm.addEventListener('submit', (evt) => {
     evt.preventDefault();
-    upload(fileInput.files[0])
+
+    fetch(`${window.location.origin}/api/get-json/`, {
+        method: 'GET',
+    })
+        .then(response => response.json())
+        .then(success => infoBlock.innerText = JSON.stringify(success))
+        .catch(err => console.log(err.message()));
 });

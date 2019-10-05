@@ -1,3 +1,5 @@
-const router = require('./base-api');
+const baseApi = require('./base-api'); // После слов про то, что структура важна...) Решил сделать так
 
-module.exports = router;
+module.exports = {
+    baseApi
+};

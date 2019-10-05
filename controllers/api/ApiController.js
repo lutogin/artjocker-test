@@ -1,6 +1,6 @@
-const csv           = require('fast-csv');
-const { Parser }     = require('json2csv');
-const mongoose      = require('mongoose');
+const csv           = require('fast-csv'); // С CSV работал первый раз, решил заюзать этот модуль.
+const { Parser }    = require('json2csv');
+const mongoose      = require('mongoose'); // С Mongo тоже сталкнулся первый раз, не судите строго :)
 const User          = require('../../models/User');
 
 /**
@@ -15,35 +15,54 @@ class ApiController {
      * @param res
      * @returns {Promise<Response>}
      */
-    static async download(req, res) {
-        // let body = '';
-        // req.on('data', function (data) {
-        //     body += data;
-        //     console.log(body)
-        // });
+    static async downloadCSV(req, res) {
 
-        if (!req.files)
-            return res.status(400).send('No files were uploaded.');
+        // if (!req.files)
+        //     return res.status(400).send('No files were uploaded.');
 
-        let file = req.files.file;
+        // let file = req.files.file;
         let users = [];
+        let body = '';
 
-        csv
-            .parseString(file.data.toString(), {
+        req.on('data', data => {
+            csv.parseString(data, {
                 headers: true,
                 ignoreEmpty: true
             })
-            .on("data", function(data) {
-                data['_id'] = new mongoose.Types.ObjectId();
-                users.push(data);
-            })
-            .on("end", function() {
-                // @todo: Возможно тот стоит сделать .update в цикле по UserName
-                User.create(users, function(err, documents) {
-                    if (err) throw err;
+                .on("data", data => {
+                    data['_id'] = new mongoose.Types.ObjectId();
+                    users.push(data);
+                })
+                .on("end", () => {
+                    // @todo: Возможно тот стоит сделать .update в цикле по UserName
+                    users.forEach((user) => {
+                        User.updateOne(
+                            {UserName: user.UserName},
+                            {FirstName: user.FirstName, LastName: user.LastName, Age: user.Age},
+                            {upsert: true},
+                            (err, user) => {
+                                if (err) throw err
+                            }
+                        );
+                    });
+
+                    // for (let i = 0; i < users.length; i++) {
+                    //     User.updateOne(
+                    //         {UserName: users[i].UserName},
+                    //         {'FirstName': users[i].FirstName, 'LastName': users[i].LastName, 'Age': users[i].Age},
+                    //         {upsert: true},
+                    //         (err, user) => {
+                    //             if (err) throw err
+                    //         }
+                    //     );
+                    // }
+
+                    // User.insertMany(users, (err, user) => {
+                    //     if (err) throw err;
+                    // });
+                    res.status(200).send({msg: `${users.length} authors have been successfully uploaded.`});
                 });
-                res.status(200).send(`${users.length} authors have been successfully uploaded.`);
-            });
+        });
     }
 
     /**
@@ -64,14 +83,14 @@ class ApiController {
                     'Age',
                 ];
 
-                const parser = new Parser({ fields });
+                const parser = new Parser({ fields, quote: "" });
                 const csv = parser.parse(users);
 
                 res.set("Content-Disposition", "attachment;filename=users.csv");
                 res.set("Content-Type", "application/octet-stream");
                 res.status(200).send(csv);
             })
-            .catch(e => console.error(e.message()))
+            .catch(err => console.error(err.message));
     }
 
     /**
@@ -83,10 +102,8 @@ class ApiController {
      */
     static async getJSON(req, res) {
         User.find({}, {_id: 0, created: 0, __v: 0})
-            .then(users => {
-                res.status(200).send(JSON.stringify(users));
-            })
-            .catch(e => console.error(e.message()))
+            .then(users => JSON.stringify(res.send(users)))
+            .catch(err => console.error(err.message));
     }
 };
 

@@ -8,12 +8,12 @@ const routesPublic  = require('./routes/public');
 const app = express();
 
 // Connect to DB
-mongoose.connect('mongodb://localhost/csvimport', {
+mongoose.connect('mongodb://localhost/csv-user-test', {
     useUnifiedTopology: true,
     useNewUrlParser: true
 })
     .then(() => console.log('Mongo DB has started.'))
-    .catch(e => console.error(e.message()))
+    .catch(err => console.error(err.message))
 
 /**
  * Middleware
@@ -31,8 +31,8 @@ app.use(express.static(path.join(__dirname, 'static')));
 /**
  * Routes
  */
-app.use('/', routesPublic);
-app.use('/api', routesApi);
+app.use('/', routesPublic.basePublic);
+app.use('/api', routesApi.baseApi);
 
 // Catch 404
 app.use((req, res) => {

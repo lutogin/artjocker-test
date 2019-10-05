@@ -1,3 +1,5 @@
-const router = require('./base-public');
+const basePublic = require('./base-public'); // Возмодно подобное решение излишне)
 
-module.exports = router;
+module.exports = {
+    basePublic
+};
