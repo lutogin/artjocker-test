@@ -28,14 +28,12 @@ downloadCsvForm.addEventListener('submit', (evt) => {
 });
 
 /**
- * Обработка ПОлучения JSON
+ * Обработка получения JSON.
  */
 getJsonForm.addEventListener('submit', (evt) => {
     evt.preventDefault();
 
-    fetch(`${window.location.origin}/api/get-json/`, {
-        method: 'GET',
-    })
+    fetch(`${window.location.origin}/api/get-json/`, {method: 'GET'})
         .then(response => response.json())
         .then(success => infoBlock.innerText = JSON.stringify(success))
         .catch(err => console.log(err.message()));

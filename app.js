@@ -1,14 +1,15 @@
 const express       = require('express');
-const fileUpload    = require('express-fileupload');
-const mongoose      = require('mongoose');
+const mongoose      = require('mongoose'); // Первый раз использую Mongo+Mongoose, не судите строго.
 const path          = require('path');
 const routesApi     = require('./routes/api');
 const routesPublic  = require('./routes/public');
 
 const app = express();
 
-// Connect to DB
-mongoose.connect('mongodb://localhost/csv-user-test', {
+/**
+ * Connect to DB.
+ */
+mongoose.connect('mongodb://localhost/csv_user_test', {
     useUnifiedTopology: true,
     useNewUrlParser: true
 })
@@ -16,16 +17,9 @@ mongoose.connect('mongodb://localhost/csv-user-test', {
     .catch(err => console.error(err.message))
 
 /**
- * Middleware
+ * Middleware.
  */
-app.use(fileUpload({
-    // limits: { fileSize: 50 * 1024 * 1024 },
-    // useTempFiles : true,
-    // tempFileDir : '/tmp/'
-}));
-
-// Каталог для статичный файлов
-app.use(express.static(path.join(__dirname, 'static')));
+app.use(express.static(path.join(__dirname, 'static'))); // Статика.
 
 
 /**
@@ -38,6 +32,7 @@ app.use('/api', routesApi.baseApi);
 app.use((req, res) => {
     res.status(404).end('Oops 404!');
 });
+
 
 // eslint-disable-next-line no-console
 app.listen(3000, () => console.log('Server on http://localhost:3000'));

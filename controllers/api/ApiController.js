@@ -1,7 +1,7 @@
-const csv           = require('fast-csv'); // С CSV работал первый раз, решил заюзать этот модуль.
-const { Parser }    = require('json2csv');
-const mongoose      = require('mongoose'); // С Mongo тоже сталкнулся первый раз, не судите строго :)
+const mongoose      = require('mongoose'); // С Mongo тоже столкнулся первый раз, не судите строго :)
 const User          = require('../../models/User');
+const csv           = require('fast-csv'); // С CSV работал первый раз, решил использовать этот модуль.
+const { Parser }    = require('json2csv');
 
 /**
  * API контроллер.
@@ -16,13 +16,7 @@ class ApiController {
      * @returns {Promise<Response>}
      */
     static async downloadCSV(req, res) {
-
-        // if (!req.files)
-        //     return res.status(400).send('No files were uploaded.');
-
-        // let file = req.files.file;
         let users = [];
-        let body = '';
 
         req.on('data', data => {
             csv.parseString(data, {
@@ -34,39 +28,30 @@ class ApiController {
                     users.push(data);
                 })
                 .on("end", () => {
-                    // @todo: Возможно тот стоит сделать .update в цикле по UserName
+                    // Если пользователь с UserName уже существует - обновим его поля, иначе создаем нового.
                     users.forEach((user) => {
                         User.updateOne(
                             {UserName: user.UserName},
-                            {FirstName: user.FirstName, LastName: user.LastName, Age: user.Age},
+                            {FirstName: user.FirstName, LastName: user.LastName, Age: user.Age, created: new Date()},
                             {upsert: true},
                             (err, user) => {
-                                if (err) throw err
+                                if (err) res.status(500).send({msg: `Ошибка! ${err.message}`});
                             }
                         );
                     });
 
-                    // for (let i = 0; i < users.length; i++) {
-                    //     User.updateOne(
-                    //         {UserName: users[i].UserName},
-                    //         {'FirstName': users[i].FirstName, 'LastName': users[i].LastName, 'Age': users[i].Age},
-                    //         {upsert: true},
-                    //         (err, user) => {
-                    //             if (err) throw err
-                    //         }
-                    //     );
-                    // }
-
-                    // User.insertMany(users, (err, user) => {
-                    //     if (err) throw err;
-                    // });
                     res.status(200).send({msg: `${users.length} authors have been successfully uploaded.`});
+
+                    // Начальный вариант, тупо постоянно добавляем пользователей, с дубликатами.
+                    // User.insertMany(users, (err, user) => {
+                    //     if (err) res.status(500).send({msg: `Ошибка! ${err.message}`});
+                    // });
                 });
         });
     }
 
     /**
-     * Возвращает CSV всех пользователей с БД
+     * Возвращает CSV всех пользователей с БД.
      *
      * @param req
      * @param res
@@ -83,25 +68,25 @@ class ApiController {
                     'Age',
                 ];
 
-                const parser = new Parser({ fields, quote: "" });
+                const parser = new Parser({ fields, quote: '' });
                 const csv = parser.parse(users);
 
-                res.set("Content-Disposition", "attachment;filename=users.csv");
-                res.set("Content-Type", "application/octet-stream");
+                res.set('Content-Disposition', 'attachment;filename=users.csv');
+                res.set('Content-Type', 'application/octet-stream');
                 res.status(200).send(csv);
             })
             .catch(err => console.error(err.message));
     }
 
     /**
-     * Возвращает JSON обьект всем пользователей в БД.
+     * Возвращает JSON обьект всех пользователей в БД.
      *
      * @param req
      * @param res
      * @returns {Promise<void>}
      */
     static async getJSON(req, res) {
-        User.find({}, {_id: 0, created: 0, __v: 0})
+        User.find({}, {_id: 0, __v: 0, created: 0})
             .then(users => JSON.stringify(res.send(users)))
             .catch(err => console.error(err.message));
     }
