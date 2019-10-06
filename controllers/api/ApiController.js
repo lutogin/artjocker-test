@@ -89,7 +89,7 @@ class ApiController {
      */
   static async getJSON(req, res) {
     User.find({}, { _id: 0, __v: 0, created: 0 })
-      .then((users) => JSON.stringify(res.send(users)))
+      .then((users) => res.send(JSON.stringify(users)))
       .catch((err) => console.error(err.message));
   }
 }
