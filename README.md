@@ -1,2 +1,5 @@
 # artjocker-test
-Lutogin
+
+>Author: Lutogin A.
+
+> For run: ```$npm run dev```
