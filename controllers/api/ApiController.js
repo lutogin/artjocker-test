@@ -35,7 +35,7 @@ class ApiController {
               {
                 FirstName: user.FirstName, LastName: user.LastName, Age: user.Age, created: new Date(),
               },
-              { upsert: true },
+              { upsert: true }, // Ключ, который обновляет если существует UserName: user.UserName, иначе - создает новый.
               (err) => {
                 if (err) res.status(500).send({ msg: `Error! ${err.message}` });
               },

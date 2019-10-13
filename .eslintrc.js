@@ -22,6 +22,7 @@ module.exports = {
     'import/no-unresolved': 0,
     'import/no-webpack-loader-syntax': 0,
     'import/order': 0,
-    'no-return-await': 0
+    'no-return-await': 0,
+    'linebreak-style': ["error", "windows"]
   }
 };
