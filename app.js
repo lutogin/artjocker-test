@@ -4,6 +4,7 @@ const connect = require('./db/connect');
 const routesApi = require('./routes/api');
 const routesPublic = require('./routes/public');
 
+const port = process.env.PORT || 3000;
 const app = express();
 
 /**
@@ -28,4 +29,4 @@ app.use((req, res) => {
 });
 
 // eslint-disable-next-line no-console
-app.listen(3000, () => console.log('Server on http://localhost:3000'));
+app.listen(port, () => console.log('Server ON'));
